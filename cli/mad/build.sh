@@ -21,6 +21,6 @@ CGO_ENABLED=0 GOOS=openbsd GOARCH=arm64 go build -ldflags="-w -s" -o _/mad_openb
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -o _/mad_windows_amd64.exe
 CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -ldflags="-w -s" -o _/mad_windows_386.exe
 
-mad release github.com/txthinking/mad $1 _
+nami release github.com/txthinking/mad $1 _
 
 rm -rf _
