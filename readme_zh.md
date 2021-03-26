@@ -54,3 +54,7 @@ $ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key
 ## 作者
 
 A project by [txthinking](https://www.txthinking.com)
+
+## 开源协议
+
+基于 MIT 协议开源
