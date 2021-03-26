@@ -54,3 +54,7 @@ $ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key
 ## Author
 
 A project by [txthinking](https://www.txthinking.com)
+
+## License
+
+Licensed under The MIT License
