@@ -7,6 +7,8 @@
 
 Generate root CA and derivative certificate for any domains and any IPs
 
+❤️ A project by [txthinking.com](https://www.txthinking.com)
+
 ### Install via [Nami](https://github.com/txthinking/nami)
 
     $ nami install github.com/txthinking/mad
@@ -50,10 +52,6 @@ Generate cert for `localhost`
 ```
 $ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
 ```
-
-## Author
-
-A project by [txthinking](https://www.txthinking.com)
 
 ## License
 
