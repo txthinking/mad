@@ -7,6 +7,8 @@
 
 为任何域名和IP签发证书
 
+❤️ A project by [txthinking.com](https://www.txthinking.com)
+
 ### 安装 via [Nami](https://github.com/txthinking/nami)
 
     $ nami install github.com/txthinking/mad
@@ -50,10 +52,6 @@ $ sudo mad ca --ca ./ca.pem --key ./ca_key.pem --install
 ```
 $ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
 ```
-
-## 作者
-
-A project by [txthinking](https://www.txthinking.com)
 
 ## 开源协议
 
