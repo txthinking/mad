@@ -13,7 +13,7 @@ Generate root CA and derivative certificate for any domains and any IPs
 
 ### Install via [Nami](https://github.com/txthinking/nami)
 
-    $ nami install mad
+    nami install mad
 
 ### Usage
 
