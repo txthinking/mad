@@ -13,7 +13,7 @@
 
 ### 安装 via [Nami](https://github.com/txthinking/nami)
 
-    $ nami install github.com/txthinking/mad
+    nami install mad
 
 ### 使用
 
