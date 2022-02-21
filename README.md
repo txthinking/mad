@@ -46,13 +46,13 @@ GLOBAL OPTIONS:
 Generate root CA
 
 ```
-$ sudo mad ca --ca ./ca.pem --key ./ca_key.pem --install
+mad ca --ca ./ca.pem --key ./ca_key.pem
 ```
 
 Generate cert for `localhost`
 
 ```
-$ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
+mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
 ```
 
 ## License
