@@ -46,13 +46,13 @@ GLOBAL OPTIONS:
 生成 root CA
 
 ```
-$ sudo mad ca --ca ./ca.pem --key ./ca_key.pem --install
+mad ca --ca ./ca.pem --key ./ca_key.pem
 ```
 
 为`localhost`生成证书
 
 ```
-$ mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
+mad cert --ca ./ca.pem --ca_key ./ca_key.pem --cert ./localhost_cert.pem --key ./localhost_cert_key.pem --domain localhost
 ```
 
 ## 开源协议
