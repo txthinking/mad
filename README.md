@@ -2,10 +2,8 @@
 
 [中文](readme_zh.md)
 
-[🗣 News](https://t.me/txthinking_news)
-[💬 Chat](https://join.txthinking.com)
+[🗣 News](https://t.me/s/txthinking_news)
 [🩸 Youtube](https://www.youtube.com/txthinking) 
-[❤️ Sponsor](https://github.com/sponsors/txthinking)
 
 Generate root CA and derivative certificate for any domains and any IPs
 
