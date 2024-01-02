@@ -15,7 +15,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "Mad"
-	app.Version = "20210401"
+	app.Version = "20240102"
 	app.Usage = "Generate root CA and derivative certificate for any domains and any IPs"
 	app.Authors = []*cli.Author{
 		{
