@@ -1,10 +1,5 @@
 # mad
 
-[中文](readme_zh.md)
-
-[🗣 News](https://t.me/s/txthinking_news)
-[🩸 Youtube](https://www.youtube.com/txthinking) 
-
 Generate root CA and derivative certificate for any domains and any IPs
 
 ❤️ A project by [txthinking.com](https://www.txthinking.com)
