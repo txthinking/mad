@@ -15,7 +15,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "Mad"
-	app.Version = "20240102"
+	app.Version = "20240428"
 	app.Usage = "Generate root CA and derivative certificate for any domains and any IPs"
 	app.Authors = []*cli.Author{
 		{
@@ -105,11 +105,11 @@ func main() {
 				},
 				&cli.StringSliceFlag{
 					Name:  "ip",
-					Usage: "IP address. Repeated",
+					Usage: "IP address",
 				},
 				&cli.StringSliceFlag{
 					Name:  "domain",
-					Usage: "Domain name. Repeated",
+					Usage: "Domain name",
 				},
 			},
 			Action: func(c *cli.Context) error {

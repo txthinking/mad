@@ -24,10 +24,14 @@ type Cert struct {
 }
 
 func NewCert(caPEM, caKeyPEM []byte, Organization, OrganizationalUnit string) *Cert {
+	var l []string
+	if OrganizationalUnit != "" {
+		l = []string{OrganizationalUnit}
+	}
 	c := &x509.Certificate{
 		Subject: pkix.Name{
 			Organization:       []string{Organization},
-			OrganizationalUnit: []string{OrganizationalUnit},
+			OrganizationalUnit: l,
 		},
 		NotBefore:             time.Date(2019, time.June, 1, 0, 0, 0, 0, time.UTC),
 		NotAfter:              time.Now().AddDate(10, 0, 0),

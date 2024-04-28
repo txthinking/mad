@@ -20,10 +20,14 @@ type Ca struct {
 }
 
 func NewCa(Organization, OrganizationalUnit, CommonName string) *Ca {
+	var l []string
+	if OrganizationalUnit != "" {
+		l = []string{OrganizationalUnit}
+	}
 	c := &x509.Certificate{
 		Subject: pkix.Name{
 			Organization:       []string{Organization},
-			OrganizationalUnit: []string{OrganizationalUnit},
+			OrganizationalUnit: l,
 			CommonName:         CommonName,
 		},
 		NotBefore:             time.Now(),
