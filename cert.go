@@ -23,18 +23,22 @@ type Cert struct {
 	KeyPEM   []byte
 }
 
-func NewCert(caPEM, caKeyPEM []byte, Organization, OrganizationalUnit string) *Cert {
+func NewCert(caPEM, caKeyPEM []byte, Organization, OrganizationalUnit string, start, end time.Time) *Cert {
 	var l []string
+	if Organization != "" {
+		l = []string{Organization}
+	}
+	var l1 []string
 	if OrganizationalUnit != "" {
-		l = []string{OrganizationalUnit}
+		l1 = []string{OrganizationalUnit}
 	}
 	c := &x509.Certificate{
 		Subject: pkix.Name{
-			Organization:       []string{Organization},
-			OrganizationalUnit: l,
+			Organization:       l,
+			OrganizationalUnit: l1,
 		},
-		NotBefore:             time.Date(2019, time.June, 1, 0, 0, 0, 0, time.UTC),
-		NotAfter:              time.Now().AddDate(10, 0, 0),
+		NotBefore:             start,
+		NotAfter:              end,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
 		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
 		BasicConstraintsValid: true,
@@ -48,16 +52,16 @@ func NewCert(caPEM, caKeyPEM []byte, Organization, OrganizationalUnit string) *C
 
 func (c *Cert) SetIPAddresses(ips []net.IP) {
 	c.C.IPAddresses = ips
-	if len(ips) > 0 {
-		c.C.Subject.CommonName = ips[0].String()
-	}
+	c.C.Subject.CommonName = ips[0].String()
 }
 
 func (c *Cert) SetDNSNames(domains []string) {
 	c.C.DNSNames = domains
-	if len(domains) > 0 {
-		c.C.Subject.CommonName = domains[0]
-	}
+	c.C.Subject.CommonName = domains[0]
+}
+
+func (c *Cert) SetCommonName(commonName string) {
+	c.C.Subject.CommonName = commonName
 }
 
 func (c *Cert) Create() error {

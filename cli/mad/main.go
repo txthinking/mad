@@ -2,11 +2,10 @@ package main
 
 import (
 	"errors"
-	"io/ioutil"
 	"log"
 	"net"
-	_ "net/http/pprof"
 	"os"
+	"time"
 
 	"github.com/txthinking/mad"
 	"github.com/urfave/cli/v2"
@@ -14,8 +13,8 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "Mad"
-	app.Version = "20240428"
+	app.Name = "mad"
+	app.Version = "20240923"
 	app.Usage = "Generate root CA and derivative certificate for any domains and any IPs"
 	app.Authors = []*cli.Author{
 		{
@@ -36,7 +35,7 @@ func main() {
 				&cli.StringFlag{
 					Name:  "key",
 					Usage: "Key file which will be created or overwritten",
-					Value: "ca_key.pem",
+					Value: "ca.key.pem",
 				},
 				&cli.StringFlag{
 					Name:  "organization",
@@ -50,13 +49,36 @@ func main() {
 					Name:  "commonName",
 					Value: "github.com/txthinking/mad",
 				},
+				&cli.StringFlag{
+					Name:  "start",
+					Usage: "Certificate valid start time, such as: '2024-09-22T13:07:38+08:00'. If empty, it is the current time",
+				},
+				&cli.StringFlag{
+					Name:  "end",
+					Usage: "Certificate valid end time, such as: '2024-09-22T13:07:38+08:00'. If empty, it is start time add 10 years",
+				},
 				&cli.BoolFlag{
 					Name:  "install",
-					Usage: "Install CA",
+					Usage: "Install immediately after creation",
 				},
 			},
 			Action: func(c *cli.Context) error {
-				ca := mad.NewCa(c.String("organization"), c.String("organizationUnit"), c.String("commonName"))
+				var err error
+				start := time.Now()
+				if c.String("start") != "" {
+					start, err = time.Parse(time.RFC3339, c.String("start"))
+					if err != nil {
+						return err
+					}
+				}
+				end := start.AddDate(10, 0, 0)
+				if c.String("end") != "" {
+					end, err = time.Parse(time.RFC3339, c.String("end"))
+					if err != nil {
+						return err
+					}
+				}
+				ca := mad.NewCa(c.String("organization"), c.String("organizationUnit"), c.String("commonName"), start, end)
 				if err := ca.Create(); err != nil {
 					return err
 				}
@@ -82,8 +104,12 @@ func main() {
 				},
 				&cli.StringFlag{
 					Name:  "ca_key",
+					Usage: "Deprecated, please use --caKey",
+				},
+				&cli.StringFlag{
+					Name:  "caKey",
 					Usage: "ROOT Key file path",
-					Value: "ca_key.pem",
+					Value: "ca.key.pem",
 				},
 				&cli.StringFlag{
 					Name:  "cert",
@@ -93,7 +119,7 @@ func main() {
 				&cli.StringFlag{
 					Name:  "key",
 					Usage: "Certificate key file which will be created or overwritten",
-					Value: "cert_key.pem",
+					Value: "cert.key.pem",
 				},
 				&cli.StringFlag{
 					Name:  "organization",
@@ -111,17 +137,51 @@ func main() {
 					Name:  "domain",
 					Usage: "Domain name",
 				},
+				&cli.StringFlag{
+					Name:  "commonName",
+					Usage: "If empty, the first domain or IP will be used",
+				},
+				&cli.StringFlag{
+					Name:  "start",
+					Usage: "Certificate valid start time, such as: '2024-09-22T13:07:38+08:00'. If empty, it is the current time",
+				},
+				&cli.StringFlag{
+					Name:  "end",
+					Usage: "Certificate valid end time, such as: '2024-09-22T13:07:38+08:00'. If empty, it is start time add 10 years",
+				},
 			},
 			Action: func(c *cli.Context) error {
-				ca, err := ioutil.ReadFile(c.String("ca"))
+				ca, err := os.ReadFile(c.String("ca"))
 				if err != nil {
 					return err
 				}
-				caKey, err := ioutil.ReadFile(c.String("ca_key"))
-				if err != nil {
-					return err
+				var caKey []byte
+				if c.String("ca_key") != "" {
+					caKey, err = os.ReadFile(c.String("ca_key"))
+					if err != nil {
+						return err
+					}
+				} else {
+					caKey, err = os.ReadFile(c.String("caKey"))
+					if err != nil {
+						return err
+					}
 				}
-				cert := mad.NewCert(ca, caKey, c.String("organization"), c.String("organizationUnit"))
+				start := time.Now()
+				if c.String("start") != "" {
+					start, err = time.Parse(time.RFC3339, c.String("start"))
+					if err != nil {
+						return err
+					}
+				}
+				end := start.AddDate(10, 0, 0)
+				if c.String("end") != "" {
+					end, err = time.Parse(time.RFC3339, c.String("end"))
+					if err != nil {
+						return err
+					}
+				}
+				cert := mad.NewCert(ca, caKey, c.String("organization"), c.String("organizationUnit"), start, end)
 				ips := make([]net.IP, 0)
 				for _, v := range c.StringSlice("ip") {
 					ip := net.ParseIP(v)
@@ -130,8 +190,15 @@ func main() {
 					}
 					ips = append(ips, ip)
 				}
-				cert.SetIPAddresses(ips)
-				cert.SetDNSNames(c.StringSlice("domain"))
+				if len(ips) > 0 {
+					cert.SetIPAddresses(ips)
+				}
+				if len(c.StringSlice("domain")) > 0 {
+					cert.SetDNSNames(c.StringSlice("domain"))
+				}
+				if c.String("commonName") != "" {
+					cert.SetCommonName(c.String("commonName"))
+				}
 				if err := cert.Create(); err != nil {
 					return err
 				}

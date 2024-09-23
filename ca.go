@@ -19,19 +19,23 @@ type Ca struct {
 	KeyPEM []byte
 }
 
-func NewCa(Organization, OrganizationalUnit, CommonName string) *Ca {
+func NewCa(Organization, OrganizationalUnit, CommonName string, start, end time.Time) *Ca {
 	var l []string
+	if Organization != "" {
+		l = []string{Organization}
+	}
+	var l1 []string
 	if OrganizationalUnit != "" {
-		l = []string{OrganizationalUnit}
+		l1 = []string{OrganizationalUnit}
 	}
 	c := &x509.Certificate{
 		Subject: pkix.Name{
-			Organization:       []string{Organization},
-			OrganizationalUnit: l,
+			Organization:       l,
+			OrganizationalUnit: l1,
 			CommonName:         CommonName,
 		},
-		NotBefore:             time.Now(),
-		NotAfter:              time.Now().AddDate(10, 0, 0),
+		NotBefore:             start,
+		NotAfter:              end,
 		IsCA:                  true,
 		KeyUsage:              x509.KeyUsageCertSign,
 		BasicConstraintsValid: true,
